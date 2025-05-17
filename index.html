@@ -14,7 +14,7 @@
             <div class="col col-md-6 offset-md-3">
                 <div class="card text-center">
                     <div class="card-header">
-                        <p class="m-0 title-page">Игра Угадайка</p>
+                        <p class="m-0 title-page collapse show" id="titlePage">Игра Угадайка</p>
                         <p class="m-0 value-range hidden">Диапазон значений</p>
                         <p class="m-0 terms hidden">Условия</p>
                         <p class="m-0 question hidden">Вопрос № <span id="orderNumberField">5</span></p>
@@ -51,7 +51,7 @@
                     </div>
                     
                     <div class="card-footer">
-                        <button class="btn btn-outline-dark btnTobegin" id="btnTobegin">Начать игру</button>
+                        <button class="btn btn-outline-dark btnTobegin collapsed" id="btnTobegin" data-bs-toggle="collapse" data-bs-target="#titlePage">Начать игру</button>
                         <button class="btn btn-outline-dark hidden" id="btnProceed">Продолжить</button> 
                         <button class="btn btn-outline-dark hidden" id="btnPlay">Играть</button>
                         <button class="btn btn-link hidden" id="btnRetry">Заново</button>

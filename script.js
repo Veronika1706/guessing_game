@@ -62,7 +62,7 @@ function numberToText(num) {
 
 // Первая карточка - Начать игру
 document.getElementById('btnTobegin').addEventListener('click', function () { 
-    document.querySelector('.title-page').classList.add('hidden');              
+    document.querySelector('.title-page').classList.remove('show');              
     document.querySelector('.value-range').classList.remove('hidden');          
     document.querySelector('.valueRange').classList.remove('hidden');           
     document.querySelector('.form-inline').classList.remove('hidden');          
