@@ -1,3 +1,65 @@
+function numberToText(num) { 
+        const number = Math.abs(num);
+
+        const units = ['один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+        const tens = ['десять', 'одинадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+        const dozens = ['двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+        const hundreds = ['сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
+        
+        const numberText = num < 0 ? 'минус ' : '';
+
+        if (number == 0) {
+            return String(0);
+        }
+
+        if (number < 10) {
+            return numberText + units[number - 1];
+        }
+
+        if (number < 20) {
+            return numberText + tens[number - 10];
+        }
+
+        if (number < 100) {
+            const divNumber = number % 10;
+            return `${numberText}${dozens[Math.floor(number / 10) - 2]}${(divNumber) === 0 ? '' : ` ${units[divNumber - 1]}`}`;
+        }
+
+        if (number <= 999) {
+            const hundred = hundreds[Math.floor(number / 100) - 1];
+            if (number % 100 === 0) {
+                return numberText + hundred;
+            }
+            return numberText + hundred + ` ${numberToText(number % 100)}`;
+        }
+    }
+
+    function getPhraseCheckNumber() {
+        let phrase = '';
+        const phraseRandom = Math.round(Math.random() * 4); 
+        switch (phraseRandom) {
+            case 0:
+                phrase = `Вы загадали число`
+                break;
+            case 1:
+                phrase = `Я думаю, это число`
+                break;
+
+            case 2:
+                phrase = `Может быть это`
+                break;
+
+            case 3:
+                phrase = `Вероятнее всего это число`
+                break;
+
+            case 4:
+                phrase = `Предположу, что это число`
+                break;
+        }
+        return phrase;
+    }
+
 // Первая карточка - Начать игру
 document.getElementById('btnTobegin').addEventListener('click', function () { 
     document.querySelector('.title-page').classList.add('hidden');              
@@ -48,52 +110,10 @@ document.getElementById('btnPlay').addEventListener('click', function () {
     const answerField = document.getElementById('answerField');
     orderNumberField.innerText = orderNumber;
 
-    let units = ['', 'один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-    let teens = ['', 'десять', 'одинадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
-    let dozens = ['', 'двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
-    let hundreds = ['', 'сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
-
-    function numberToText() { 
-        let number = Math.abs(answerNumber);
-        let text = '';
-
-        if (number == 0) {
-            return 0;
-        }
-
-        if (number <= 9) {
-            return units[Math.floor(Math.abs(number) / 1)];
-        }
-
-        if (number > 9 && number < 20) {
-            return teens[Math.floor(number / 10 + number % 10)];
-        }
-
-        if (number >= 20 && number <= 99) {
-            return dozens[(Math.floor(number / 10)) - 1] + " " + units[Math.floor(number % 10)];
-        }
-
-        if (number >= 100 && number <= 999) {
-            return hundreds[Math.floor(number / 100)] + " " + numberToTextHundreds();
-        }
-    }
-
-    function numberToTextHundreds() {
-        let unitsTeensDozens = Math.abs(answerNumber) % 100;
-
-        if (unitsTeensDozens <= 9) {
-            return units[Math.floor(unitsTeensDozens / 1)];
-        }
-
-        if (unitsTeensDozens > 9 && unitsTeensDozens < 20) {
-            return teens[(Math.floor(unitsTeensDozens / 10)) + (unitsTeensDozens % 10)];
-        }
-
-        if (unitsTeensDozens >= 20 && unitsTeensDozens <= 99) {
-            return dozens[(Math.floor(unitsTeensDozens / 10)) - 1] + " " + units[Math.floor(unitsTeensDozens % 10)];
-        }
-    }
-    answerField.innerText = answerNumber >= 0 ? numberToText().length < 20 && answerNumber >= 0 ? `Вы загадали число ${numberToText()}?` : `Вы загадали число ${answerNumber}?` : numberToText().length < 20 ? `Вы загадали число минус ${numberToText()}?` : `Вы загадали число ${answerNumber}?`;
+    
+    const compNumber = numberToText(answerNumber);
+    const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
+    answerField.innerText = `Вы загадали число ${resultNumber}?`;
 
     document.getElementById('btnLess').addEventListener('click', function () { 
         if (gameRun) {
@@ -123,28 +143,11 @@ document.getElementById('btnPlay').addEventListener('click', function () {
                 answerNumber = Math.floor((minValue + maxValue) / 2);
                 orderNumber++;
                 orderNumberField.innerText = orderNumber;
-                const phraseRandom = Math.round(Math.random() * 4); 
-                switch (phraseRandom) {
-                    case 0:
-                        answerPhrase = `Вы загадали число`
-                        break;
-                    case 1:
-                        answerPhrase = `Я думаю, это число`
-                        break;
-
-                    case 2:
-                        answerPhrase = `Может быть это`
-                        break;
-
-                    case 3:
-                        answerPhrase = `Вероятнее всего это число`
-                        break;
-
-                    case 4:
-                        answerPhrase = `Предположу, что это число`
-                        break;
-                }
-                answerField.innerText = answerNumber >= 0 ? numberToText().length < 20 && answerNumber >= 0 ? `${answerPhrase} ${numberToText()}?` : `${answerPhrase} ${answerNumber}?` : numberToText().length < 20 ? `${answerPhrase} минус ${numberToText()}?` : `${answerPhrase} ${answerNumber}?`;
+                
+                const phraseCheckNumber = getPhraseCheckNumber();
+                const compNumber = numberToText(answerNumber);
+                const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
+                answerField.innerText = `${phraseCheckNumber} ${resultNumber}?`;
             }
         }
     })
@@ -177,29 +180,11 @@ document.getElementById('btnPlay').addEventListener('click', function () {
                 answerNumber = Math.floor((minValue + maxValue) / 2);
                 orderNumber++;
                 orderNumberField.innerText = orderNumber;
-                const phraseRandom = Math.round(Math.random() * 4);
-                switch (phraseRandom) {
-                    case 0:
-                        answerPhrase = `Вы загадали число`
-                        break;
-
-                    case 1:
-                        answerPhrase = `Я думаю, это число`
-                        break;
-
-                    case 2:
-                        answerPhrase = `Может быть это`
-                        break;
-
-                    case 3:
-                        answerPhrase = `Вероятнее всего это число`
-                        break;
-
-                    case 4:
-                        answerPhrase = `Предположу, что это число`
-                        break;
-                }
-                answerField.innerText = answerNumber >= 0 ? numberToText().length < 20 && answerNumber >= 0 ? `${answerPhrase} ${numberToText()}?` : `${answerPhrase} ${answerNumber}?` : numberToText().length < 20 ? `${answerPhrase} минус ${numberToText()}?` : `${answerPhrase} ${answerNumber}?`;
+                const phraseCheckNumber = getPhraseCheckNumber();
+                
+                const compNumber = numberToText(answerNumber);
+                const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
+                answerField.innerText = `${phraseCheckNumber} ${resultNumber}?`;
             }
         }
     })
