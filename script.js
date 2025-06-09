@@ -1,249 +1,138 @@
+const questionPhrases = [
+    'Вы загадали число', 
+    'Я думаю, это число',
+    'Может быть это',
+    'Вероятнее всего это число',
+    'Предположу, что это число'
+];
+
+const winPhrases = [
+    'Я так и знал!',
+    'Ура!',
+    'Супер',
+    'Сыграем еще?'
+];
+
+const errorPhrases = [
+    'Вы загадали неверное число',
+    'Вы забыли, какое число загадали?',
+    'Сначала определитесь с числом..',
+    'Я вас раскусил, вы меня обманываете!'
+];
+
+function getQuestion(number) {
+    const randomQuestion = questionPhrases[Math.floor(questionPhrases.length * Math.random())];
+    const compNumber = numberToText(number);
+    const textNumber = compNumber.length < 20 ? compNumber : number;
+    return `${randomQuestion} ${textNumber}?`
+};
+
 function numberToText(num) { 
-        const number = Math.abs(num);
+    const number = Math.abs(num);
 
-        const units = ['один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
-        const tens = ['десять', 'одинадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
-        const dozens = ['двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
-        const hundreds = ['сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
-        
-        const numberText = num < 0 ? 'минус ' : '';
-
-        if (number == 0) {
-            return String(0);
-        }
-
-        if (number < 10) {
-            return numberText + units[number - 1];
-        }
-
-        if (number < 20) {
-            return numberText + tens[number - 10];
-        }
-
-        if (number < 100) {
-            const divNumber = number % 10;
-            return `${numberText}${dozens[Math.floor(number / 10) - 2]}${(divNumber) === 0 ? '' : ` ${units[divNumber - 1]}`}`;
-        }
-
-        if (number <= 999) {
-            const hundred = hundreds[Math.floor(number / 100) - 1];
-            if (number % 100 === 0) {
-                return numberText + hundred;
-            }
-            return numberText + hundred + ` ${numberToText(number % 100)}`;
-        }
-    }
-
-    function getPhraseCheckNumber() {
-        let phrase = '';
-        const phraseRandom = Math.round(Math.random() * 4); 
-        switch (phraseRandom) {
-            case 0:
-                phrase = `Вы загадали число`
-                break;
-            case 1:
-                phrase = `Я думаю, это число`
-                break;
-
-            case 2:
-                phrase = `Может быть это`
-                break;
-
-            case 3:
-                phrase = `Вероятнее всего это число`
-                break;
-
-            case 4:
-                phrase = `Предположу, что это число`
-                break;
-        }
-        return phrase;
-    }
-
-// Первая карточка - Начать игру
-document.getElementById('btnTobegin').addEventListener('click', function () { 
-    document.querySelector('.title-page').classList.remove('show');              
-    document.querySelector('.value-range').classList.remove('hidden');          
-    document.querySelector('.valueRange').classList.remove('hidden');           
-    document.querySelector('.form-inline').classList.remove('hidden');          
-    document.querySelector('#btnTobegin').classList.add('hidden');              
-    document.querySelector('#btnProceed').classList.remove('hidden');         
-})
-
-// Вторая карточка - Диапозон значений,  условия 
-document.getElementById('btnProceed').addEventListener('click', function () { 
-    document.querySelector('.value-range').classList.add('hidden');             
-    document.querySelector('.terms').classList.remove('hidden');                
-    document.querySelector('.valueRange').classList.add('hidden');              
-    document.querySelector('.form-inline').classList.add('hidden');             
-    document.querySelector('.guessNumber').classList.remove('hidden');          
-    document.querySelector('#btnProceed').classList.add('hidden');              
-    document.querySelector('#btnPlay').classList.remove('hidden');              
-    minValue = parseInt(document.querySelector('#formInputMin').value);
-    maxValue = parseInt(document.querySelector('#formInputMax').value);
-    minValue = (minValue < -999) ? minValue = -999 : (minValue > 999) ? minValue = 999 : minValue;
-    maxValue = (maxValue > 999) ? maxValue = 999 : (maxValue < -999) ? maxValue = -999 : maxValue;
-    if (Number.isNaN(maxValue) || Number.isNaN(minValue)) {
-        minValue = 0;
-        maxValue = 100;
-    }
-    guessNumber.innerText = `Загадайте любое целое число от ${minValue} до ${maxValue}, а я его угадаю`;
-})
-
-// Третья карточка - Игра
-document.getElementById('btnPlay').addEventListener('click', function () {      
-    document.querySelector('.terms').classList.add('hidden');                   
-    document.querySelector('.question').classList.remove('hidden');             
-    document.querySelector('.guessNumber').classList.add('hidden');             
-    document.querySelector('.no-gutters').classList.remove('hidden');           
-    document.querySelector('#btnPlay').classList.add('hidden');                 
-    document.querySelector('#btnLess').classList.remove('hidden');              
-    document.querySelector('#btnEqual').classList.remove('hidden');             
-    document.querySelector('#btnOver').classList.remove('hidden');              
-    document.querySelector('.btn-link').classList.remove('hidden');             
-
-    let answerNumber = Math.floor((minValue + maxValue) / 2); 
-    let orderNumber = 1; 
-    let gameRun = true;
-
-    const orderNumberField = document.getElementById('orderNumberField'); 
-    const answerField = document.getElementById('answerField');
-    orderNumberField.innerText = orderNumber;
-
+    const units = ['один', 'два', 'три', 'четыре', 'пять', 'шесть', 'семь', 'восемь', 'девять'];
+    const tens = ['десять', 'одинадцать', 'двенадцать', 'тринадцать', 'четырнадцать', 'пятнадцать', 'шестнадцать', 'семнадцать', 'восемнадцать', 'девятнадцать'];
+    const dozens = ['двадцать', 'тридцать', 'сорок', 'пятьдесят', 'шестьдесят', 'семьдесят', 'восемьдесят', 'девяносто'];
+    const hundreds = ['сто', 'двести', 'триста', 'четыреста', 'пятьсот', 'шестьсот', 'семьсот', 'восемьсот', 'девятьсот'];
     
-    const compNumber = numberToText(answerNumber);
-    const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
-    answerField.innerText = `Вы загадали число ${resultNumber}?`;
+    const numberText = num < 0 ? 'минус ' : '';
 
-    document.getElementById('btnLess').addEventListener('click', function () { 
-        if (gameRun) {
-            if (minValue === maxValue || minValue == answerNumber) {
-                const phraseRandom = Math.round(Math.random() * 3);
-                switch (phraseRandom) {
-                    case 0:
-                        answerPhrase = `Вы загадали неверное число`
-                        break;
+    if (number == 0) {
+        return String(0);
+    }
 
-                    case 1:
-                        answerPhrase = `Вы забыли, какое число загадали?`
-                        break;
+    if (number < 10) {
+        return numberText + units[number - 1];
+    }
 
-                    case 2:
-                        answerPhrase = `Сначала определитесь с числом..`
-                        break;
+    if (number < 20) {
+        return numberText + tens[number - 10];
+    }
 
-                    case 3:
-                        answerPhrase = `Я вас раскусил, вы меня обманываете!`
-                        break;
-                }
-                answerField.innerText = answerPhrase;
-                gameRun = false;
-            } else {
-                maxValue = answerNumber - 1; 
-                answerNumber = Math.floor((minValue + maxValue) / 2);
-                orderNumber++;
-                orderNumberField.innerText = orderNumber;
-                
-                const phraseCheckNumber = getPhraseCheckNumber();
-                const compNumber = numberToText(answerNumber);
-                const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
-                answerField.innerText = `${phraseCheckNumber} ${resultNumber}?`;
-            }
+    if (number < 100) {
+        const divNumber = number % 10;
+        return `${numberText}${dozens[Math.floor(number / 10) - 2]}${(divNumber) === 0 ? '' : ` ${units[divNumber - 1]}`}`;
+    }
+
+    if (number <= 999) {
+        const hundred = hundreds[Math.floor(number / 100) - 1];
+        if (number % 100 === 0) {
+            return numberText + hundred;
         }
-    })
+        return numberText + hundred + ` ${numberToText(number % 100)}`;
+    }
+};
 
-    document.getElementById('btnOver').addEventListener('click', function () {
-        if (gameRun) {
-            if (minValue === maxValue) {
-                const phraseRandom = Math.round(Math.random() * 3);
-                switch (phraseRandom) {
-                    case 0:
-                        answerPhrase = `Вы загадали неверное число`
-                        break;
+let minValue, maxValue, answerNumber, orderNumber, gameRun;
 
-                    case 1:
-                        answerPhrase = `Вы забыли, какое число загадали?`
-                        break;
+const settingsGame = document.querySelector('#settingsGame');
+const settingsGameCollapse = bootstrap.Collapse.getOrCreateInstance(settingsGame);
+const game = document.querySelector('#game');
+const gameCollapse = bootstrap.Collapse.getOrCreateInstance(game);
+const footerStart = document.querySelector('#footerStart');
+const footerStartCollapse = bootstrap.Collapse.getOrCreateInstance(footerStart);
 
-                    case 2:
-                        answerPhrase = `Сначала определитесь с числом..`
-                        break;
+function startGame() {
+    settingsGameCollapse.hide();
+    gameCollapse.show();
+    footerStartCollapse.show();
+    minValue = parseInt(document.querySelector('#minValue').value) || 0;
+    maxValue = parseInt(document.querySelector('#maxValue').value) || 100;
+    minValue = isNaN(minValue) ? 0 : Math.max(-999, minValue);
+    maxValue = isNaN(maxValue) ? 0 : Math.min(999, maxValue);
+    orderNumber = 1;
+    gameRun = true;
+    answerNumber = Math.floor((minValue + maxValue) / 2);
+    document.querySelector('#orderNumberField').textContent = orderNumber;
+    document.querySelector('#answerField').textContent = getQuestion(answerNumber);
+};
 
-                    case 3:
-                        answerPhrase = `Я вас раскусил, вы меня обманываете!`
-                        break;
-                }
-                answerField.innerText = answerPhrase;
-                gameRun = false;
-            } else {
-                minValue = answerNumber + 1; 
-                answerNumber = Math.floor((minValue + maxValue) / 2);
-                orderNumber++;
-                orderNumberField.innerText = orderNumber;
-                const phraseCheckNumber = getPhraseCheckNumber();
-                
-                const compNumber = numberToText(answerNumber);
-                const resultNumber = compNumber.length < 20 ? compNumber : answerNumber;
-                answerField.innerText = `${phraseCheckNumber} ${resultNumber}?`;
-            }
+function nextQuestion() {
+    orderNumber++;
+    answerNumber = Math.floor((minValue + maxValue) / 2);
+    document.querySelector('#orderNumberField').textContent = orderNumber;
+    document.querySelector('#answerField').textContent = getQuestion(answerNumber);
+};
+
+document.querySelector('#startGame').addEventListener('click', startGame);
+document.querySelector('#btnRetry').addEventListener('click', () => {
+    gameCollapse.hide();
+    footerStartCollapse.hide();
+    settingsGameCollapse.show();
+    document.querySelector('#minValue').value = '';
+    document.querySelector('#maxValue').value = '';
+});
+
+document.querySelector('#btnOver').addEventListener('click', () => {
+    if (gameRun) {
+        if (minValue === maxValue) {
+            document.querySelector('#answerField').textContent = errorPhrases[Math.floor(errorPhrases.length * Math.random())];
+            gameRun = false;
+        } else {
+            minValue = answerNumber + 1;
+            nextQuestion();
         }
-    })
+    }
+});
 
-    document.getElementById('btnEqual').addEventListener('click', function () {
-        if (gameRun) {
-            const phraseRandom = Math.round(Math.random() * 3);
-            switch (phraseRandom) {
-                case 0:
-                    answerPhrase = `Я так и знал!`
-                    break;
+document.querySelector('#btnLess').addEventListener('click', () => {
+    if (gameRun) {
+        if (minValue === maxValue) {
+            document.querySelector('#answerField').textContent = errorPhrases[Math.floor(errorPhrases.length * Math.random())];
+            gameRun = false;
+        } else {
+            maxValue = answerNumber - 1;
+            nextQuestion();
+        }
+    }
+});
 
-                case 1:
-                    answerPhrase = `Ура!`
-                    break;
-
-                case 2:
-                    answerPhrase = `Супер`
-                    break;
-
-                case 3:
-                    answerPhrase = `Сыграем еще?`
-                    break;
-            }
-            answerField.innerText = answerPhrase;
+document.querySelector('#btnEqual').addEventListener('click', () => {
+    if (gameRun) {
+            document.querySelector('#answerField').textContent = winPhrases[Math.floor(errorPhrases.length * Math.random())];
             gameRun = false;
         }
-    })
-})
+});
+    
 
-// Кнопка заново
-document.getElementById('btnRetry').addEventListener('click', function () {    
-    document.querySelector('.question').classList.toggle('hidden');            
-    document.querySelector('.value-range').classList.toggle('hidden');        
-    document.querySelector('.no-gutters').classList.toggle('hidden');      
-    document.querySelector('.valueRange').classList.toggle('hidden');          
-    document.querySelector('.form-inline').classList.toggle('hidden');         
-    document.querySelector('#btnLess').classList.toggle('hidden');             
-    document.querySelector('#btnEqual').classList.toggle('hidden');            
-    document.querySelector('#btnOver').classList.toggle('hidden');             
-    document.querySelector('.btn-link').classList.toggle('hidden');             
-    document.querySelector('#btnProceed').classList.toggle('hidden');           
-    document.querySelector('#formInputMin').value = '';
-    document.querySelector('#formInputMax').value = '';
-    minValue = (minValue < -999) ? minValue = -999 : (minValue > 999) ? minValue = 999 : minValue;
-    maxValue = (maxValue > 999) ? maxValue = 999 : (maxValue < -999) ? maxValue = -999 : maxValue;
-    if (Number.isNaN(maxValue) || Number.isNaN(minValue)) {
-        minValue = 0;
-        maxValue = 100;
-    }
-    guessNumber.innerText = `Загадайте любое целое число от ${minValue} до ${maxValue}, а я его угадаю`;
 
-    document.getElementById('btnProceed').addEventListener('click', function () {   
-        document.querySelector('.value-range').classList.add('hidden');            
-        document.querySelector('.terms').classList.remove('hidden');                
-        document.querySelector('.valueRange').classList.add('hidden');             
-        document.querySelector('.form-inline').classList.add('hidden');            
-        document.querySelector('.guessNumber').classList.remove('hidden');         
-        document.querySelector('#btnProceed').classList.add('hidden');          
-        document.querySelector('#btnPlay').classList.remove('hidden');            
-    })
-})
